@@ -1,5 +1,9 @@
 package App.model;
 
+import java.util.List;
+
 public class StorageManager {
-    public void readJson(){}
+    void loadTransactions(List<Transaction> list) {
+
+    }
 }
