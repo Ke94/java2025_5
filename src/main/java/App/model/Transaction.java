@@ -8,14 +8,19 @@ public class Transaction {
     private String category;
     private int amount;
 
-    Transaction(KindOfTransaction kind, String category, int amount) {
+    public Transaction(KindOfTransaction kind, String category, int amount) {
         this.kind = kind;
         this.category = category;
         this.amount = amount;
-        this.createdTime = getCreatedTime().now();
+        this.createdTime = LocalDateTime.now();
     }
 
     public LocalDateTime getCreatedTime() {
         return createdTime;
+    }
+
+    @Override
+    public String toString(){
+        return createdTime+"\n"+kind+"\n"+category+"\n"+amount;
     }
 }
