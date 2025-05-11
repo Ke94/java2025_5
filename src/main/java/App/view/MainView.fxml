@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <HBox prefHeight="31.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <Button mnemonicParsing="false" text="增加" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" text="刪除" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" text="編輯" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" text="匯出Excel" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" text="匯率查詢" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </top>
+   <left>
+      <TableView id="transactionTable" prefHeight="231.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn prefWidth="75.0" text="日期" />
+          <TableColumn prefWidth="75.0" text="類別" />
+            <TableColumn prefWidth="75.0" text="金額" />
+            <TableColumn prefWidth="75.0" text="註解" />
+        </columns>
+      </TableView>
+   </left>
+</BorderPane>
