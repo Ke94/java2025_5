@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class StorageManager {
 
     public StorageManager(){
         gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDataGsonAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeGsonAdapter())
                 .setPrettyPrinting()
                 .create();
     }

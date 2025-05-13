@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * 代表一筆交易資料，例如收入或支出。
  */
 public class Transaction {
-    private LocalDate createdTime;
+    private LocalDateTime createdTime;
     private KindOfTransaction kind;
     private String category;
     private int amount;
@@ -22,10 +22,10 @@ public class Transaction {
         this.kind = kind;
         this.category = category;
         this.amount = amount;
-        this.createdTime = LocalDate.now();
+        this.createdTime = LocalDateTime.now();
     }
 
-    public LocalDate getCreatedTime() {
+    public LocalDateTime getCreatedTime() {
         return createdTime;
     }
     public KindOfTransaction getKind() {
