@@ -12,6 +12,7 @@ import java.util.List;
 public class StorageManagerTest {
     public static void main(String[] args){
         ListOfTransaction transactions = new ListOfTransaction(getTransactions());
+//        transactions.sortByCreatedTime();
         ListOfTransaction transactionOfMay= transactions.selectByMonth(5);
         StorageManager storageManager = new StorageManager();
         storageManager.saveTransactions(transactionOfMay.getList());
