@@ -1,6 +1,7 @@
 package App.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 代表一筆交易資料，例如收入或支出。
@@ -20,10 +21,17 @@ public class Transaction {
      * @param note 註解
      */
     public Transaction(KindOfTransaction kind, String category, int amount, String note) {
+        this.createdTime = LocalDate.now();
         this.kind = kind;
         this.category = category;
         this.amount = amount;
-        this.createdTime = LocalDate.now();
+        this.note = note;
+    }
+    public Transaction(LocalDate createdTime, KindOfTransaction kind, String category, int amount, String note) {
+        this.createdTime = createdTime;
+        this.kind = kind;
+        this.category = category;
+        this.amount = amount;
         this.note = note;
     }
 
@@ -32,6 +40,8 @@ public class Transaction {
     public String getCategory() { return category; }
     public int getAmount() { return amount; }
     public String getNote() { return note; }
+    public int getYear() { return createdTime.getYear(); }
+    public int getMonth() { return createdTime.getMonthValue(); }
 
     @Override
     public String toString(){
