@@ -11,18 +11,20 @@ public class Transaction {
     private KindOfTransaction kind;
     private String category;
     private int amount;
-
+    private String note;
     /**
      * 建立一筆交易，會自動記錄創建時間。
      * @param kind INCOME 或 EXPENSES
      * @param category 類別名稱，例如 "Food"、"Salary"
      * @param amount 金額（正整數）
      */
-    public Transaction(KindOfTransaction kind, String category, int amount) {
+    public Transaction(KindOfTransaction kind, String category, int amount, String note) {
         this.kind = kind;
         this.category = category;
         this.amount = amount;
+        this.note = note;
         this.createdTime = LocalDateTime.now();
+
     }
 
     public LocalDateTime getCreatedTime() {
@@ -37,7 +39,7 @@ public class Transaction {
     public int getAmount() {
         return amount;
     }
-
+    public String getNote() {return note;}
     @Override
     public String toString(){
         return createdTime+"\n"+kind+"\n"+category+"\n"+amount;
