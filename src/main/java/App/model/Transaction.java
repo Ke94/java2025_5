@@ -1,16 +1,16 @@
 package App.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 代表一筆交易資料，例如收入或支出。
  */
 public class Transaction {
-    private LocalDateTime createdTime;
+    private LocalDate createdTime;
     private KindOfTransaction kind;
     private String category;
     private int amount;
+    private String note;
 
     /**
      * 建立一筆交易，會自動記錄創建時間。
@@ -18,14 +18,22 @@ public class Transaction {
      * @param category 類別名稱，例如 "Food"、"Salary"
      * @param amount 金額（正整數）
      */
-    public Transaction(KindOfTransaction kind, String category, int amount) {
+    public Transaction(KindOfTransaction kind, String category, int amount, String note) {
         this.kind = kind;
         this.category = category;
         this.amount = amount;
-        this.createdTime = LocalDateTime.now();
+        this.createdTime = LocalDate.now();
+        this.note = note;
+    }
+    public Transaction(LocalDate createdTime, KindOfTransaction kind, String category, int amount, String note) {
+        this.kind = kind;
+        this.category = category;
+        this.amount = amount;
+        this.createdTime = createdTime;
+        this.note = note;
     }
 
-    public LocalDateTime getCreatedTime() {
+    public LocalDate getCreatedTime() {
         return createdTime;
     }
     public KindOfTransaction getKind() {
@@ -36,6 +44,15 @@ public class Transaction {
     }
     public int getAmount() {
         return amount;
+    }
+    public String getNote() {
+        return note;
+    }
+    public int getYear(){
+        return createdTime.getYear();
+    }
+    public int getMonth(){
+        return createdTime.getMonthValue();
     }
 
     @Override

@@ -8,15 +8,18 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     @Override
-    public void start(Stage stage) throws Exception {
-        // 透過 FXMLLoader 載入 FXML 畫面
-        Parent root = FXMLLoader.load(getClass().getResource("/app/view/MainView.fxml"));
+    public void start(Stage stage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/view/MainView.fxml"));
+            Parent root = loader.load();
 
-
-        Scene scene = new Scene(root, 900, 600);
-        stage.setScene(scene);
-        stage.setTitle("理財管理小幫手");
-        stage.show();
+            Scene scene = new Scene(root, 900, 600);
+            stage.setScene(scene);
+            stage.setTitle("理財管理小幫手");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();  // ✅ 一定要這行，這樣錯誤不會被吃掉
+        }
     }
 
     public static void main(String[] args) {
