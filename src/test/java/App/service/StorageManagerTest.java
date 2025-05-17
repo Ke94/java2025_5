@@ -13,9 +13,9 @@ public class StorageManagerTest {
     public static void main(String[] args){
         ListOfTransaction transactions = new ListOfTransaction(getTransactions());
 //        transactions.sortByCreatedTime();
-        ListOfTransaction transactionOfMay= transactions.selectByMonth(5);
+//        ListOfTransaction transactionOfMay= transactions.selectByMonth(5);
         StorageManager storageManager = new StorageManager();
-        storageManager.saveTransactions(transactionOfMay.getList());
+        storageManager.saveTransactions(transactions.getList());
         List<Transaction> list2 = storageManager.loadTransactions();
         for(Transaction transaction : list2){
             System.out.println(transaction.toString());
