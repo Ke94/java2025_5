@@ -45,6 +45,14 @@ public class Transaction {
     public int getAmount() {
         return amount;
     }
+
+    /**
+     * 根據記錄類型獲得金額
+     * @return 收入為正數 支出為負數
+     */
+    public int getAmountWithKind() {
+        return (kind == KindOfTransaction.INCOME ? amount : -amount);
+    }
     public String getNote() {
         return note;
     }

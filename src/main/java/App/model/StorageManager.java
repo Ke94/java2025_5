@@ -3,7 +3,12 @@ package App.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,6 +16,8 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Transaction的儲存管理器，可以load或save json檔案
@@ -50,5 +57,40 @@ public class StorageManager {
             System.out.println(err.getMessage());
             return new ArrayList<Transaction>();
         }
+    }
+
+    /**
+     * 將Json檔轉成xlsx
+     * @throws IOException 檔案開啟失敗
+     */
+    public void convertJsonToXlsx() throws IOException{
+        Type listType = new TypeToken<List<Map<String, Object>>>(){}.getType();
+        List<Map<String, Object>> data = gson.fromJson(new FileReader("transactions.json"), listType);
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Data");
+
+        Set<String> keys = data.getFirst().keySet();
+        List<String> keyList = new ArrayList<>(keys);
+
+        Row header = sheet.createRow(0);
+        for (int i = 0; i < keyList.size(); i++) {
+            header.createCell(i).setCellValue(keyList.get(i));
+        }
+
+        for (int i = 0; i < data.size(); i++) {
+            Row row = sheet.createRow(i + 1);
+            Map<String, Object> record = data.get(i);
+            for (int j = 0; j < keyList.size(); j++) {
+                Object value = record.get(keyList.get(j));
+                row.createCell(j).setCellValue(value != null ? value.toString() : "");
+            }
+        }
+        try (FileOutputStream fos = new FileOutputStream("transactions.xlsx")) {
+            workbook.write(fos);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        workbook.close();
     }
 }
