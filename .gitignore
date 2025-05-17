@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 transactions.json
 transactions.xlsx
+**/exchange_data.json
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
