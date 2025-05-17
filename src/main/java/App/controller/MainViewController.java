@@ -1,5 +1,9 @@
 package App.controller;
 
+import java.time.LocalDate;
+import java.util.Comparator;
+import App.model.ListOfTransaction;
+import App.model.StorageManager;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
@@ -21,7 +25,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class MainViewController {
+    private ListOfTransaction listOfTransaction = new ListOfTransaction();
     private ObservableList<Transaction> transactionList = FXCollections.observableArrayList();
+    private StorageManager storageManager = new StorageManager();
 
     @FXML private TableView<Transaction> transactionTable;
     @FXML private TableColumn<Transaction, String> dateColumn;
@@ -29,8 +35,9 @@ public class MainViewController {
     @FXML private TableColumn<Transaction, String> categoryColumn;
     @FXML private TableColumn<Transaction, Number> amountColumn;
     @FXML private TableColumn<Transaction, String> noteColumn;
+
     @FXML private ComboBox<Integer> yearComboBox;
-    @FXML private ComboBox<Integer> monthComboBox;
+    @FXML private ComboBox<String> monthComboBox;
     @FXML private ComboBox<KindOfTransaction> kindComboBox;
 
     @FXML private PieChart pieChart;
@@ -39,6 +46,9 @@ public class MainViewController {
 
     @FXML
     public void initialize() {
+        // 讀取存檔
+        listOfTransaction = new ListOfTransaction(storageManager.loadTransactions());
+        transactionList.setAll(listOfTransaction.getList());
         // 綁定 TableView 的資料來源
         transactionTable.setItems(transactionList);
 
@@ -60,11 +70,21 @@ public class MainViewController {
         );
 
         yearComboBox.getItems().addAll(2024, 2025);
-        monthComboBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+        // 改成包含「全部」與 1~12
+        monthComboBox.getItems().add("全部");
+        for (int i = 1; i <= 12; i++) {
+            monthComboBox.getItems().add(i + "月");
+        }
+
+
+
+
+        kindComboBox.getItems().add(null);  // null 當作「全部」
         kindComboBox.getItems().addAll(KindOfTransaction.values());
+        kindComboBox.setPromptText("全部");
 
         yearComboBox.setValue(2025);
-        monthComboBox.setValue(4);
+        monthComboBox.setValue("全部");
         kindComboBox.setValue(KindOfTransaction.EXPENSES);
 
         setupPieChart();
@@ -138,10 +158,134 @@ public class MainViewController {
         });
 
         dialog.showAndWait().ifPresent(transaction -> {
-            transactionList.add(transaction);  //  只改 list
+            listOfTransaction.add(transaction);   // 只加到 ListOfTransaction
+            transactionList.setAll(listOfTransaction.getList());  //  重新同步 TableView
+            storageManager.saveTransactions(listOfTransaction.getList());
         });
 
     }
+
+    @FXML
+    private void onDeleteButtonClicked() {
+        Transaction selected = transactionTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            listOfTransaction.getList().remove(selected);
+            transactionList.setAll(listOfTransaction.getList());  // 同步刷新
+            storageManager.saveTransactions(listOfTransaction.getList());
+        } else {
+            System.out.println("請先選擇要刪除的資料");
+        }
+    }
+
+    @FXML
+    private void onEditButtonClicked() {
+        Transaction selected = transactionTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            System.out.println("請選擇要編輯的項目");
+            return;
+        }
+
+        Dialog<Transaction> dialog = new Dialog<>();
+        dialog.setTitle("編輯記帳");
+
+        // 建立 UI
+        ComboBox<KindOfTransaction> kindBox = new ComboBox<>();
+        kindBox.getItems().addAll(KindOfTransaction.values());
+        kindBox.setValue(selected.getKind());
+
+        ComboBox<String> categoryBox = new ComboBox<>();
+        updateCategoryBox(kindBox.getValue(), categoryBox);
+        categoryBox.setValue(selected.getCategory());
+
+        kindBox.setOnAction(e -> updateCategoryBox(kindBox.getValue(), categoryBox));
+
+        TextField amountField = new TextField(String.valueOf(selected.getAmount()));
+        TextField noteField = new TextField(selected.getNote());
+
+        VBox content = new VBox(10, kindBox, categoryBox, amountField, noteField);
+
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                try {
+                    int amount = Integer.parseInt(amountField.getText());
+                    return new Transaction(kindBox.getValue(), categoryBox.getValue(), amount, noteField.getText());
+                } catch (NumberFormatException e) {
+                    System.out.println("請輸入正確金額");
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(newTransaction -> {
+            /// 找出在 listOfTransaction 的位置
+            int index = listOfTransaction.getList().indexOf(selected);
+
+            if (index != -1) {
+                transactionList.remove(selected);
+                listOfTransaction.remove(index);
+            }
+
+            // 加入新的
+            transactionList.add(newTransaction);
+            listOfTransaction.add(newTransaction);
+
+            storageManager.saveTransactions(listOfTransaction.getList());
+            transactionTable.refresh();
+        });
+    }
+
+    @FXML
+    private void onFilterButtonClicked() {
+        int selectedYear = yearComboBox.getValue();
+        String selectedMonthStr = monthComboBox.getValue();
+        Integer selectedMonth = null;
+        if (!"全部".equals(selectedMonthStr)) {
+            selectedMonth = Integer.parseInt(selectedMonthStr.replace("月", ""));
+        }
+
+        KindOfTransaction selectedKind = kindComboBox.getValue(); // 可能是 null
+
+        ListOfTransaction filtered = listOfTransaction.selectByYear(selectedYear);
+
+        if (selectedMonth != null) {
+            filtered = filtered.selectByMonth(selectedMonth);
+        }
+
+        if (selectedKind != null) {
+            filtered = new ListOfTransaction(
+                    filtered.getList().stream()
+                            .filter(t -> t.getKind() == selectedKind)
+                            .toList()
+            );
+        }
+
+        var sortedList = filtered.getList().stream()
+                .sorted(Comparator.comparing(Transaction::getCreatedTime))
+                .toList();
+
+        transactionList.setAll(sortedList);
+    }
+
+
+    @FXML
+    private void onInitDummyDataClicked() {
+        listOfTransaction.add(new Transaction(LocalDate.of(2025, 5, 17), KindOfTransaction.EXPENSES, "飲食", 1234, "午餐"));
+        listOfTransaction.add(new Transaction(LocalDate.of(2025, 5, 18), KindOfTransaction.INCOME, "薪水", 50000, "五月薪資"));
+        listOfTransaction.add(new Transaction(LocalDate.of(2025, 4, 9), KindOfTransaction.EXPENSES, "娛樂", 800, "看電影"));
+        listOfTransaction.add(new Transaction(LocalDate.of(2025, 5, 20), KindOfTransaction.EXPENSES, "交通", 300, "捷運"));
+        listOfTransaction.add(new Transaction(LocalDate.of(2025, 4, 15), KindOfTransaction.INCOME, "投資", 3000, "配息"));
+        listOfTransaction.add(new Transaction(LocalDate.of(2024, 6, 1), KindOfTransaction.EXPENSES, "娛樂", 2489, "加油"));
+        listOfTransaction.add(new Transaction(LocalDate.of(2024, 6, 4), KindOfTransaction.EXPENSES, "交通", 4802, "喝咖啡"));
+        listOfTransaction.add(new Transaction(LocalDate.of(2024, 1, 22), KindOfTransaction.EXPENSES, "飲食", 4927, "唱KTV"));
+        listOfTransaction.add(new Transaction(LocalDate.of(2025, 12, 9), KindOfTransaction.INCOME, "投資", 6007, "股票分紅"));
+        listOfTransaction.add(new Transaction(LocalDate.of(2025, 3, 6), KindOfTransaction.EXPENSES, "娛樂", 2423, "喝咖啡"));
+        transactionList.setAll(listOfTransaction.getList());  // 馬上顯示
+        storageManager.saveTransactions(listOfTransaction.getList());
+    }
+
 
     private void updateCategoryBox(KindOfTransaction kind, ComboBox<String> categoryBox) {
         categoryBox.getItems().clear();
