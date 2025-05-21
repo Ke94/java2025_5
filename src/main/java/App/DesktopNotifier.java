@@ -3,9 +3,6 @@ import java.awt.*;
 import java.awt.TrayIcon.MessageType;
 
 public class DesktopNotifier {
-    public static void main(String[] args){
-        showMessage("日圓貶值", "快買");
-    }
     public static void showMessage(String title, String message){
         if(!SystemTray.isSupported()){
             System.err.println("沒有支援");
@@ -20,8 +17,6 @@ public class DesktopNotifier {
             tray.add(mytrayIcon);
             mytrayIcon.displayMessage(title, message, MessageType.INFO);
 
-//            Thread.sleep(5000);
-//            tray.remove(mytrayIcon);
         }
         catch(Exception e){
             e.printStackTrace();
