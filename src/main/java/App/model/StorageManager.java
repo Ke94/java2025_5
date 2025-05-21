@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.io.File;
 
 /**
  * Transaction的儲存管理器，可以load或save json檔案
@@ -63,7 +64,7 @@ public class StorageManager {
      * 將Json檔轉成xlsx
      * @throws IOException 檔案開啟失敗
      */
-    public void convertJsonToXlsx() throws IOException{
+    public void convertJsonToXlsx(File file) throws IOException{
         Type listType = new TypeToken<List<Map<String, Object>>>(){}.getType();
         List<Map<String, Object>> data = gson.fromJson(new FileReader("transactions.json"), listType);
 
@@ -92,5 +93,18 @@ public class StorageManager {
             throw new RuntimeException(e);
         }
         workbook.close();
+    }
+
+    public List<Transaction> loadTransactionsFromFile(File file) throws IOException {
+        Type listType = new TypeToken<List<Transaction>>(){}.getType();
+        try (FileReader reader = new FileReader(file)) {
+            return gson.fromJson(reader, listType);
+        }
+    }
+
+    public void saveTransactionsToFile(File file, List<Transaction> list) throws IOException {
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(list, writer);
+        }
     }
 }
