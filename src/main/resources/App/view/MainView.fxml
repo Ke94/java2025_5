@@ -10,9 +10,10 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.controller.MainViewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.controller.MainViewController">
    <top>
       <HBox prefHeight="31.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER_LEFT">
          <children>
@@ -26,7 +27,7 @@
             <ComboBox fx:id="monthComboBox" prefHeight="23.0" prefWidth="75.0" promptText="月份" />
             <ComboBox fx:id="kindComboBox" prefHeight="23.0" prefWidth="75.0" promptText="支出/收入/全部" />
             <Button mnemonicParsing="false" onAction="#onFilterButtonClicked" prefHeight="23.0" prefWidth="51.0" text="篩選" />
-            <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="51.0" onAction="#onInitDummyDataClicked" text="測試" />
+            <Button mnemonicParsing="false" onAction="#onInitDummyDataClicked" prefHeight="23.0" prefWidth="51.0" text="測試" />
          </children>
       </HBox>
    </top>
@@ -42,17 +43,21 @@
       </TableView>
    </left>
    <right>
-      <VBox maxWidth="400.0" prefHeight="369.0" prefWidth="400.0" spacing="20.0" BorderPane.alignment="CENTER">
+      <VBox maxWidth="613.0" prefHeight="569.0" prefWidth="613.0" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
-            <PieChart fx:id="pieChart" prefHeight="250.0" prefWidth="350.0" />
-            <BarChart fx:id="barChart" prefHeight="250.0" prefWidth="350.0">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
-            </BarChart>
+            <StackPane prefHeight="400.0" prefWidth="600.0">
+               <children>
+                  <PieChart fx:id="pieChart" prefHeight="564.0" prefWidth="600.0" />
+                  <BarChart fx:id="barChart">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+               </children>
+            </StackPane>
          </children>
       </VBox>
    </right>

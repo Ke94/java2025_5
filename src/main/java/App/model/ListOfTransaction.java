@@ -1,17 +1,29 @@
 package App.model;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.util.Pair;
 
-public class ListOfTransaction {
-    private List<Transaction> list;
+import java.util.*;
+
+public class ListOfTransaction{
+    private ObservableList<Transaction> list;
+    private HashMap<String, Integer> categories = new HashMap<>();
 
     public ListOfTransaction(){
-        list = new ArrayList<>();
+        list = FXCollections.observableArrayList();
     }
     public ListOfTransaction(List<Transaction> list){
+        this.list = FXCollections.observableArrayList(list);
+        for(Transaction t : list){
+            addToCategories(t);
+        }
+    }
+    public ListOfTransaction(ObservableList<Transaction> list){
         this.list = list;
+        for(Transaction t : list){
+            addToCategories(t);
+        }
     }
 
     /**
@@ -20,13 +32,26 @@ public class ListOfTransaction {
      */
     public void add(Transaction transaction){
         list.add(transaction);
+        addToCategories(transaction);
+    }
+    public void addToCategories(Transaction transaction){
+        categories.put(transaction.getCategory(), categories.getOrDefault(transaction.getCategory(), 0)+1);
     }
     /**
      * 刪除指定位置的交易記錄
      * @param index 索引值
      */
     public void remove(int index){
+        removeFromCategories(list.get(index));
         list.remove(index);
+    }
+    public void remove(Transaction transaction){
+        removeFromCategories(transaction);
+        list.remove(transaction);
+    }
+    public void removeFromCategories(Transaction transaction){
+        categories.replace(transaction.getCategory(), categories.get(transaction.getCategory())-1);
+        if(categories.get(transaction.getCategory()) == 0) categories.remove(transaction.getCategory());
     }
     /**
      * 修改指定位置的交易紀錄
@@ -36,6 +61,33 @@ public class ListOfTransaction {
     public void modify(int index, Transaction transaction){
         list.set(index, transaction);
     }
+
+    public void clearCategories(){
+        categories.clear();
+    }
+
+    public void setAll(ObservableList<Transaction> list){
+        clearCategories();
+        this.list.setAll(list);
+        for(Transaction t : list){
+            addToCategories(t);
+        }
+    }
+    public void setAll(ListOfTransaction list){
+        clearCategories();
+        this.list.setAll(list.getList());
+        for(Transaction t : list.getList()){
+            addToCategories(t);
+        }
+    }
+    public void setAll(List<Transaction> list){
+        clearCategories();
+        this.list.setAll(FXCollections.observableArrayList(list));
+        for(Transaction t : list){
+            addToCategories(t);
+        }
+    }
+
 
     /**
      * 計算List中所有記錄金額總和
@@ -55,6 +107,22 @@ public class ListOfTransaction {
         for(int i = l; i <= r; i++)
             res += list.get(i).getAmountWithKind();
         return res;
+    }
+    public int sumWithCategory(String category){
+        int res = 0;
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getCategory() == category)
+                res += list.get(i).getAmount();
+        }
+        return res;
+    }
+
+    public List<Pair<String, Integer>> getCategoryAndAmount(){
+        List<Pair<String, Integer>> ret = new ArrayList<>();
+        for(String category : categories.keySet()){
+            ret.add(new Pair<>(category, sumWithCategory(category)));
+        }
+        return ret;
     }
 
     /**
@@ -107,10 +175,22 @@ public class ListOfTransaction {
     }
 
     /**
+     * 以"類別"篩選資料
+     * @param category 類別
+     * @return 篩選出來的 ListOfTransaction 物件
+     */
+    public ListOfTransaction selectByCategory(String category){
+        ListOfTransaction filtered = new ListOfTransaction();
+        for(Transaction t : list)
+            if(t.getCategory().equals(category)) filtered.add(t);
+        return filtered;
+    }
+
+    /**
      * 獲得物件裡面存的 List
      * @return
      */
-    public List<Transaction> getList(){
+    public ObservableList<Transaction> getList(){
         return list;
     }
 
