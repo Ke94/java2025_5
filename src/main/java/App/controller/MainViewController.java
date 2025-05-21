@@ -19,12 +19,22 @@ import javafx.collections.ObservableList;
 import App.model.Transaction;
 import javafx.scene.control.*;
 import App.model.KindOfTransaction;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Pair;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.util.List;
+import java.io.IOException;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 
 public class MainViewController {
     private ListOfTransaction listOfTransaction = new ListOfTransaction();
@@ -45,6 +55,7 @@ public class MainViewController {
 
     @FXML private PieChart pieChart;
     @FXML private BarChart<String, Number> barChart;
+    @FXML private Label balanceLabel;
     @FXML private ToggleGroup chartGroup;
     @FXML private ToggleButton pieToggle;
     @FXML private ToggleButton barToggle;
@@ -94,6 +105,10 @@ public class MainViewController {
         monthComboBox.setValue("全部");
         kindComboBox.setValue(KindOfTransaction.EXPENSES);
 
+        setupPieChart();
+        setupBarChart();
+
+        updateBalance();
 
         showPieChart();
         ToggleGroup chartGroup = pieToggle.getToggleGroup(); // 切換圖表的按鈕組
@@ -174,8 +189,10 @@ public class MainViewController {
 
         TextField noteField = new TextField();
         noteField.setPromptText("註解");
+        DatePicker datePicker = new DatePicker();  // 日期選擇器
+        datePicker.setValue(LocalDate.now());      // 預設為今天
 
-        VBox content = new VBox(10, kindBox, categoryBox, amountField, noteField);
+        VBox content = new VBox(10, datePicker, kindBox, categoryBox, amountField, noteField);
 
         dialog.getDialogPane().setContent(content);
 
@@ -186,7 +203,8 @@ public class MainViewController {
             if (button == ButtonType.OK) {
                 try {
                     int amount = Integer.parseInt(amountField.getText());
-                    return new Transaction(kindBox.getValue(), categoryBox.getValue(), amount, noteField.getText());
+                    LocalDate date = datePicker.getValue();
+                    return new Transaction(date, kindBox.getValue(), categoryBox.getValue(), amount, noteField.getText());
                 } catch (NumberFormatException e) {
                     // 可以改用提示
                     System.out.println("請輸入正確金額");
@@ -199,6 +217,7 @@ public class MainViewController {
             listOfTransaction.add(transaction);   // 只加到 ListOfTransaction
             transactionList.setAll(listOfTransaction.getList());  //  重新同步 TableView
             storageManager.saveTransactions(listOfTransaction.getList());
+            updateBalance();
         });
 
     }
@@ -213,16 +232,18 @@ public class MainViewController {
         } else {
             System.out.println("請先選擇要刪除的資料");
         }
+        updateBalance();
     }
 
     @FXML
     private void onEditButtonClicked() {
+
         Transaction selected = transactionTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
             System.out.println("請選擇要編輯的項目");
             return;
         }
-
+        DatePicker datePicker = new DatePicker(selected.getCreatedTime());
         Dialog<Transaction> dialog = new Dialog<>();
         dialog.setTitle("編輯記帳");
 
@@ -240,7 +261,7 @@ public class MainViewController {
         TextField amountField = new TextField(String.valueOf(selected.getAmount()));
         TextField noteField = new TextField(selected.getNote());
 
-        VBox content = new VBox(10, kindBox, categoryBox, amountField, noteField);
+        VBox content = new VBox(10, datePicker, kindBox, categoryBox, amountField, noteField);
 
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -249,7 +270,8 @@ public class MainViewController {
             if (button == ButtonType.OK) {
                 try {
                     int amount = Integer.parseInt(amountField.getText());
-                    return new Transaction(kindBox.getValue(), categoryBox.getValue(), amount, noteField.getText());
+                    LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : selected.getCreatedTime();
+                    return new Transaction(date, kindBox.getValue(), categoryBox.getValue(), amount, noteField.getText());
                 } catch (NumberFormatException e) {
                     System.out.println("請輸入正確金額");
                 }
@@ -272,6 +294,7 @@ public class MainViewController {
 
             storageManager.saveTransactions(listOfTransaction.getList());
             transactionTable.refresh();
+            updateBalance();
         });
     }
 
@@ -310,21 +333,6 @@ public class MainViewController {
     }
 
 
-    @FXML
-    private void onInitDummyDataClicked() {
-        listOfTransaction.add(new Transaction(LocalDate.of(2025, 5, 17), KindOfTransaction.EXPENSES, "飲食", 1234, "午餐"));
-        listOfTransaction.add(new Transaction(LocalDate.of(2025, 5, 18), KindOfTransaction.INCOME, "薪水", 50000, "五月薪資"));
-        listOfTransaction.add(new Transaction(LocalDate.of(2025, 4, 9), KindOfTransaction.EXPENSES, "娛樂", 800, "看電影"));
-        listOfTransaction.add(new Transaction(LocalDate.of(2025, 5, 20), KindOfTransaction.EXPENSES, "交通", 300, "捷運"));
-        listOfTransaction.add(new Transaction(LocalDate.of(2025, 4, 15), KindOfTransaction.INCOME, "投資", 3000, "配息"));
-        listOfTransaction.add(new Transaction(LocalDate.of(2024, 6, 1), KindOfTransaction.EXPENSES, "娛樂", 2489, "加油"));
-        listOfTransaction.add(new Transaction(LocalDate.of(2024, 6, 4), KindOfTransaction.EXPENSES, "交通", 4802, "喝咖啡"));
-        listOfTransaction.add(new Transaction(LocalDate.of(2024, 1, 22), KindOfTransaction.EXPENSES, "飲食", 4927, "唱KTV"));
-        listOfTransaction.add(new Transaction(LocalDate.of(2025, 12, 9), KindOfTransaction.INCOME, "投資", 6007, "股票分紅"));
-        listOfTransaction.add(new Transaction(LocalDate.of(2025, 3, 6), KindOfTransaction.EXPENSES, "娛樂", 2423, "喝咖啡"));
-        transactionList.setAll(listOfTransaction.getList());  // 馬上顯示
-        storageManager.saveTransactions(listOfTransaction.getList());
-    }
 
     private void updateCategoryBox(KindOfTransaction kind, ComboBox<String> categoryBox) {
         categoryBox.getItems().clear();
@@ -336,5 +344,68 @@ public class MainViewController {
         categoryBox.setValue(categoryBox.getItems().get(0));
     }
 
+    @FXML
+    private void onImportButtonClicked() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("選擇要匯入的 JSON 檔案");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("JSON Files", "*.json")
+        );
 
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            List<Transaction> imported;
+            try {
+                imported = storageManager.loadTransactionsFromFile(selectedFile);
+                listOfTransaction = new ListOfTransaction(imported);
+                transactionList.setAll(imported);
+                System.out.println("匯入成功：" + selectedFile.getName());
+            } catch (IOException e) {
+                System.out.println("匯入失敗：" + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void onExportButtonClicked() {
+        List<String> options = List.of("JSON", "Excel");
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("JSON", options);
+        dialog.setTitle("選擇匯出格式");
+        dialog.setHeaderText("請選擇要匯出的檔案格式");
+        dialog.setContentText("格式：");
+
+        dialog.showAndWait().ifPresent(format -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("選擇匯出位置");
+
+            if (format.equals("JSON")) {
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+            } else if (format.equals("Excel")) {
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
+            }
+
+            File file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                try {
+                    if (format.equals("JSON")) {
+                        storageManager.saveTransactionsToFile(file, listOfTransaction.getList());
+                        System.out.println("匯出 JSON 成功");
+                    } else if (format.equals("Excel")) {
+                        storageManager.convertJsonToXlsx(file); // 傳入目的地 file
+                        System.out.println("匯出 Excel 成功");
+                    }
+                } catch (IOException e) {
+                    System.out.println("匯出失敗：" + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void updateBalance() {
+        int balance = listOfTransaction.getList().stream()
+                .mapToInt(Transaction::getAmountWithKind)
+                .sum();
+
+        balanceLabel.setText("目前剩餘金額：" + balance + " 元");
+    }
 }

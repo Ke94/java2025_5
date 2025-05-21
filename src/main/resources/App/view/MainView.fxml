@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Label?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.controller.MainViewController">
    <top>
       <HBox prefHeight="31.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER_LEFT">
@@ -22,14 +23,15 @@
              <Button mnemonicParsing="false" onAction="#onAddButtonClicked" text="增加" HBox.hgrow="ALWAYS" />
              <Button mnemonicParsing="false" onAction="#onDeleteButtonClicked" text="刪除" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#onEditButtonClicked" text="編輯" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="匯入" />
-            <Button mnemonicParsing="false" text="匯出" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="匯率查詢" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#onImportButtonClicked" text="匯入" />
+             <Button onAction="#onExportButtonClicked" text="匯出" />
+             <Button mnemonicParsing="false" text="匯率查詢" HBox.hgrow="ALWAYS" />
             <ComboBox fx:id="yearComboBox" prefHeight="23.0" prefWidth="75.0" promptText="年份" />
             <ComboBox fx:id="monthComboBox" prefHeight="23.0" prefWidth="75.0" promptText="月份" />
             <ComboBox fx:id="kindComboBox" prefHeight="23.0" prefWidth="75.0" promptText="支出/收入/全部" />
             <Button mnemonicParsing="false" onAction="#onFilterButtonClicked" prefHeight="23.0" prefWidth="51.0" text="篩選" />
-            <Button mnemonicParsing="false" onAction="#onInitDummyDataClicked" prefHeight="23.0" prefWidth="51.0" text="測試" />
+             <Label fx:id="balanceLabel" text="目前餘額：" />
+
          </children>
       </HBox>
    </top>
