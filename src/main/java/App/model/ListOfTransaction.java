@@ -34,6 +34,11 @@ public class ListOfTransaction{
         list.add(transaction);
         addToCategories(transaction);
     }
+
+    /**
+     * 將交易紀錄的的類別記錄下來
+     * @param transaction 交易紀錄
+     */
     public void addToCategories(Transaction transaction){
         categories.put(transaction.getCategory(), categories.getOrDefault(transaction.getCategory(), 0)+1);
     }
@@ -45,10 +50,20 @@ public class ListOfTransaction{
         removeFromCategories(list.get(index));
         list.remove(index);
     }
+
+    /**
+     * 刪除一筆特定的交易記錄
+     * @param transaction 交易紀錄
+     */
     public void remove(Transaction transaction){
         removeFromCategories(transaction);
         list.remove(transaction);
     }
+
+    /**
+     * 減少一筆交易紀錄的類別
+     * @param transaction 交易紀錄
+     */
     public void removeFromCategories(Transaction transaction){
         categories.replace(transaction.getCategory(), categories.get(transaction.getCategory())-1);
         if(categories.get(transaction.getCategory()) == 0) categories.remove(transaction.getCategory());

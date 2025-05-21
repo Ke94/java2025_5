@@ -8,6 +8,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -58,6 +60,20 @@
                   </BarChart>
                </children>
             </StackPane>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <ToggleButton fx:id="pieToggle" mnemonicParsing="false" text="Pie">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="chartGroup" />
+                           </toggleGroup>
+                        </ToggleButton>
+                        <ToggleButton fx:id="barToggle" mnemonicParsing="false" text="Bar" toggleGroup="$chartGroup" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
       </VBox>
    </right>

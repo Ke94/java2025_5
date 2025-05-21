@@ -17,13 +17,8 @@ import javafx.scene.chart.XYChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import App.model.Transaction;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import App.model.KindOfTransaction;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -50,6 +45,9 @@ public class MainViewController {
 
     @FXML private PieChart pieChart;
     @FXML private BarChart<String, Number> barChart;
+    @FXML private ToggleGroup chartGroup;
+    @FXML private ToggleButton pieToggle;
+    @FXML private ToggleButton barToggle;
 
 
     @FXML
@@ -96,10 +94,15 @@ public class MainViewController {
         monthComboBox.setValue("全部");
         kindComboBox.setValue(KindOfTransaction.EXPENSES);
 
-//        setupPieChart();
-//        setupBarChart();
 
         showPieChart();
+        ToggleGroup chartGroup = pieToggle.getToggleGroup(); // 切換圖表的按鈕組
+        chartGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            if (newToggle != null) {
+                ToggleButton selected = (ToggleButton) newToggle;
+                System.out.println("現在選中的是：" + selected.getText());
+            }
+        });
     }
 
 
@@ -322,7 +325,6 @@ public class MainViewController {
         transactionList.setAll(listOfTransaction.getList());  // 馬上顯示
         storageManager.saveTransactions(listOfTransaction.getList());
     }
-
 
     private void updateCategoryBox(KindOfTransaction kind, ComboBox<String> categoryBox) {
         categoryBox.getItems().clear();
