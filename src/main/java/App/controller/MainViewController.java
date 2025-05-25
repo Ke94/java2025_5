@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import App.model.ListOfTransaction;
-import App.model.StorageManager;
+import App.model.*;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.Chart;
@@ -16,15 +16,11 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import App.model.Transaction;
 import javafx.scene.control.*;
-import App.model.KindOfTransaction;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Pair;
@@ -59,13 +55,16 @@ public class MainViewController {
     @FXML private ToggleGroup chartGroup;
     @FXML private ToggleButton pieToggle;
     @FXML private ToggleButton barToggle;
+    @FXML private TableView<CategorySummary> chartTable;
+    @FXML private TableColumn<CategorySummary, String> chartCategoryColumn;
+    @FXML private TableColumn<CategorySummary, Number> chartAmountColumn;
+    @FXML private TableColumn<CategorySummary, Double> chartPercentColumn;
 
 
     @FXML
     public void initialize() {
         // 讀取存檔
         listOfTransaction = new ListOfTransaction(storageManager.loadTransactions());
-//        transactionList.setAll(listOfTransaction.getList());
         transactionList.setAll(listOfTransaction);
         // 綁定 TableView 的資料來源
         transactionTable.setItems(transactionList.getList());
@@ -95,8 +94,6 @@ public class MainViewController {
         }
 
 
-
-
         kindComboBox.getItems().add(null);  // null 當作「全部」
         kindComboBox.getItems().addAll(KindOfTransaction.values());
         kindComboBox.setPromptText("全部");
@@ -105,50 +102,50 @@ public class MainViewController {
         monthComboBox.setValue("全部");
         kindComboBox.setValue(KindOfTransaction.EXPENSES);
 
-        setupPieChart();
-        setupBarChart();
 
-        updateBalance();
 
         showPieChart();
         ToggleGroup chartGroup = pieToggle.getToggleGroup(); // 切換圖表的按鈕組
         chartGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             if (newToggle != null) {
                 ToggleButton selected = (ToggleButton) newToggle;
-                System.out.println("現在選中的是：" + selected.getText());
+                if(selected.equals(barToggle)) showBarChart();
+                else showPieChart();
             }
         });
+
+        chartCategoryColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCategory()));
+        chartAmountColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getTotalAmount()));
+        chartPercentColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getPercentage()));
+        chartPercentColumn.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Double percent, boolean empty) {
+                super.updateItem(percent, empty);
+                if (empty || percent == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.1f%%", percent));
+                }
+            }
+        });
+
+        updateBalance();
     }
 
+    private void showChartTable(){chartTable.setItems(transactionList.getCategorySummaries());}
 
     private void setupPieChart() {
         pieChart.getData().clear();
-        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
-        List<Pair<String, Integer>> m = transactionList.getCategoryAndAmount();
-        m.sort(((l, r) -> r.getValue() - l.getValue()));
-        int sum = 0;
-        for (Pair<String, Integer> o : m) {
-            pieData.add(new PieChart.Data(o.getKey(), o.getValue()));
-            sum += o.getValue();
-//            System.out.println(o.getKey() + ": " + o.getValue());
-        }
-        int finalSum = sum;
-        pieData.forEach(data ->
-                data.nameProperty().bind(
-                        Bindings.concat(
-                                data.getName(),
-                                String.format(" %.2f%%", data.pieValueProperty().getValue()/(double)finalSum*100)
-                        )
-                ));
         pieChart.setStartAngle(90);
-        pieChart.setData(pieData);
-        pieChart.setTitle("支出比例");
+        pieChart.setData(transactionList.getPieChartDataWithPercentage());
+        pieChart.setTitle("比例");
     }
 
     private void showPieChart(){
         setupPieChart();
         pieChart.setVisible(true);
         barChart.setVisible(false);
+        showChartTable();
     }
 
     private void setupBarChart() {
@@ -159,11 +156,13 @@ public class MainViewController {
         series.getData().add(new XYChart.Data<>("3月", 3100));
         series.getData().add(new XYChart.Data<>("4月", 2700));
         barChart.getData().add(series);
-        barChart.setTitle("月支出總覽");
+        barChart.setTitle("月總覽");
     }
     private void showBarChart(){
+        setupBarChart();
         pieChart.setVisible(false);
         barChart.setVisible(true);
+        showChartTable();
     }
 
     @FXML
@@ -217,6 +216,7 @@ public class MainViewController {
             listOfTransaction.add(transaction);   // 只加到 ListOfTransaction
             transactionList.setAll(listOfTransaction.getList());  //  重新同步 TableView
             storageManager.saveTransactions(listOfTransaction.getList());
+            showPieChart();
             updateBalance();
         });
 
@@ -229,6 +229,7 @@ public class MainViewController {
             listOfTransaction.remove(selected);
             transactionList.setAll(listOfTransaction.getList());  // 同步刷新
             storageManager.saveTransactions(listOfTransaction.getList());
+            showPieChart();
         } else {
             System.out.println("請先選擇要刪除的資料");
         }
@@ -295,6 +296,7 @@ public class MainViewController {
             storageManager.saveTransactions(listOfTransaction.getList());
             transactionTable.refresh();
             updateBalance();
+            showPieChart();
         });
     }
 

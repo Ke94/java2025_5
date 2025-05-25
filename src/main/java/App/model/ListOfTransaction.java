@@ -2,9 +2,11 @@ package App.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.PieChart;
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ListOfTransaction{
     private ObservableList<Transaction> list;
@@ -240,4 +242,52 @@ public class ListOfTransaction{
         if(reverse) list.sort(Comparator.comparing(Transaction::getCreatedTime).reversed());
         else list.sort(Comparator.comparing(Transaction::getCreatedTime));
     }
+
+    public ObservableList<CategorySummary> getCategorySummaries() {
+        int total = list.stream().mapToInt(Transaction::getAmount).sum();
+
+        // 建立中介資料
+        Map<String, Integer> map = new HashMap<>();
+        for (Transaction t : list) {
+            map.put(t.getCategory(), map.getOrDefault(t.getCategory(), 0) + t.getAmount());
+        }
+
+        // 排序並建立資料
+        List<CategorySummary> sortedList = map.entrySet().stream()
+                .map(entry -> {
+                    String category = entry.getKey();
+                    int amount = entry.getValue();
+                    double percentage = total == 0 ? 0 : (amount * 100.0 / total);
+                    return new CategorySummary(category, amount, percentage);
+                })
+                .sorted(Comparator.comparingDouble(CategorySummary::getPercentage).reversed())
+                .collect(Collectors.toList());
+
+        return FXCollections.observableArrayList(sortedList);
+    }
+
+
+    public ObservableList<PieChart.Data> getPieChartDataWithPercentage() {
+        ObservableList<CategorySummary> summaries = getCategorySummaries();
+
+        // 計算總金額
+        double total = summaries.stream().mapToDouble(CategorySummary::getTotalAmount).sum();
+
+        // 按金額從大到小排序
+        List<CategorySummary> sorted = summaries.stream()
+                .sorted((a, b) -> Integer.compare(b.getTotalAmount(), a.getTotalAmount()))
+                .collect(Collectors.toList());
+
+        // 建立 PieChart 資料
+        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
+        for (CategorySummary summary : sorted) {
+            double amount = summary.getTotalAmount();
+            double percent = total == 0 ? 0 : (amount * 100.0 / total);
+            String label = String.format("%s %.1f%%", summary.getCategory(), percent);
+            pieData.add(new PieChart.Data(label, amount));
+        }
+
+        return pieData;
+    }
+
 }
