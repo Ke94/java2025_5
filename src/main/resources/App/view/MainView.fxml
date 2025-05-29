@@ -25,7 +25,7 @@
             <Button mnemonicParsing="false" onAction="#onEditButtonClicked" text="編輯" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#onImportButtonClicked" text="匯入" />
              <Button onAction="#onExportButtonClicked" text="匯出" />
-             <Button mnemonicParsing="false" text="匯率查詢" HBox.hgrow="ALWAYS" />
+             <Button mnemonicParsing="false" text="匯率查詢" HBox.hgrow="ALWAYS" onAction="#onExchangeRateButtonClicked"/>
             <ComboBox fx:id="yearComboBox" prefHeight="23.0" prefWidth="75.0" promptText="年份" />
             <ComboBox fx:id="monthComboBox" prefHeight="23.0" prefWidth="75.0" promptText="月份" />
             <ComboBox fx:id="kindComboBox" prefHeight="23.0" prefWidth="75.0" promptText="支出/收入/全部" />
