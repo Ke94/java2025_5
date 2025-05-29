@@ -87,10 +87,8 @@ public class StorageManager {
                 row.createCell(j).setCellValue(value != null ? value.toString() : "");
             }
         }
-        try (FileOutputStream fos = new FileOutputStream("transactions.xlsx")) {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
             workbook.write(fos);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
         workbook.close();
     }

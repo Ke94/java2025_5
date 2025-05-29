@@ -105,12 +105,11 @@ public class MainViewController {
 
 
         showPieChart();
+        showChartTable();
         ToggleGroup chartGroup = pieToggle.getToggleGroup(); // 切換圖表的按鈕組
         chartGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             if (newToggle != null) {
-                ToggleButton selected = (ToggleButton) newToggle;
-                if(selected.equals(barToggle)) showBarChart();
-                else showPieChart();
+                refreshChart();
             }
         });
 
@@ -140,28 +139,24 @@ public class MainViewController {
         pieChart.setData(transactionList.getPieChartDataWithPercentage());
         pieChart.setTitle("比例");
     }
-
-    private void showPieChart(){
-        setupPieChart();
-        pieChart.setVisible(true);
-        barChart.setVisible(false);
-        showChartTable();
-    }
-
     private void setupBarChart() {
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("2025 收支");
-        series.getData().add(new XYChart.Data<>("1月", 3000));
-        series.getData().add(new XYChart.Data<>("2月", 2800));
-        series.getData().add(new XYChart.Data<>("3月", 3100));
-        series.getData().add(new XYChart.Data<>("4月", 2700));
-        barChart.getData().add(series);
+        barChart.getData().clear();
+        transactionList.setBarChart(barChart);
         barChart.setTitle("月總覽");
     }
+    private void showPieChart(){
+        pieChart.setVisible(true);
+        barChart.setVisible(false);
+        setupPieChart();
+    }
     private void showBarChart(){
-        setupBarChart();
         pieChart.setVisible(false);
         barChart.setVisible(true);
+        setupBarChart();
+    }
+    private void refreshChart(){
+        if(chartGroup.getSelectedToggle() == barToggle) showBarChart();
+        else showPieChart();
         showChartTable();
     }
 
@@ -216,7 +211,7 @@ public class MainViewController {
             listOfTransaction.add(transaction);   // 只加到 ListOfTransaction
             transactionList.setAll(listOfTransaction.getList());  //  重新同步 TableView
             storageManager.saveTransactions(listOfTransaction.getList());
-            showPieChart();
+            refreshChart();
             updateBalance();
         });
 
@@ -229,7 +224,7 @@ public class MainViewController {
             listOfTransaction.remove(selected);
             transactionList.setAll(listOfTransaction.getList());  // 同步刷新
             storageManager.saveTransactions(listOfTransaction.getList());
-            showPieChart();
+            refreshChart();
         } else {
             System.out.println("請先選擇要刪除的資料");
         }
@@ -296,7 +291,7 @@ public class MainViewController {
             storageManager.saveTransactions(listOfTransaction.getList());
             transactionTable.refresh();
             updateBalance();
-            showPieChart();
+            refreshChart();
         });
     }
 
@@ -331,7 +326,7 @@ public class MainViewController {
 
         transactionList.setAll(sortedList);
 
-        showPieChart();
+        refreshChart();
     }
 
 

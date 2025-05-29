@@ -2,7 +2,10 @@ package App.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -290,4 +293,24 @@ public class ListOfTransaction{
         return pieData;
     }
 
+    public void setBarChart(BarChart barChart ){
+        Map<Integer, Map<Integer, Integer>> data = new TreeMap<>();
+        for(Transaction t : list){
+            int year = t.getYear();
+            int month = t.getMonth();
+            data.putIfAbsent(year, new HashMap<>());
+            Map<Integer, Integer> monthMap = data.get(year);
+            monthMap.put(month, monthMap.getOrDefault(month, 0) + t.getAmount());
+        }
+        for(Map.Entry<Integer, Map<Integer, Integer>> mp : data.entrySet()){
+            int year = mp.getKey();
+            Map<Integer, Integer> monthMap = mp.getValue();
+            XYChart.Series<String, Integer> series = new XYChart.Series<>();
+            series.setName(year+"年");
+            for(int i = 1; i <= 12; i++){
+                series.getData().add(new XYChart.Data<>(i+"月", monthMap.getOrDefault(i, 0)));
+            }
+            barChart.getData().add(series);
+        }
+    }
 }
