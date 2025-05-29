@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.controller.ExchangeRateController">
+   <top>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label prefHeight="45.0" prefWidth="77.0" text="從台幣轉換至：" />
+            <ComboBox fx:id="currencyComboBox" prefWidth="150.0" />
+            <Button mnemonicParsing="false" onAction="#onQueryButtonClicked" text="查詢" />
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <LineChart fx:id="rateChart" prefHeight="300.0" prefWidth="786.0" title="匯率變化" BorderPane.alignment="CENTER">
+        <xAxis>
+          <CategoryAxis label="日期" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis label="匯率" side="LEFT" />
+        </yAxis>
+      </LineChart>
+   </center>
+   <right>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="建議" />
+            <TextArea fx:id="botSuggestionArea" editable="false" prefHeight="289.0" prefWidth="100.0" wrapText="true" />
+         </children>
+      </VBox>
+   </right>
+</BorderPane>
