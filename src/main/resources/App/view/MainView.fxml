@@ -6,6 +6,7 @@
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleButton?>
@@ -15,7 +16,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Label?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.controller.MainViewController">
    <top>
       <HBox prefHeight="31.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER_LEFT">
@@ -64,7 +64,7 @@
             </StackPane>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <HBox alignment="CENTER" prefHeight="45.0" prefWidth="600.0">
                      <children>
                         <ToggleButton fx:id="pieToggle" mnemonicParsing="false" text="Pie">
                            <toggleGroup>
@@ -72,6 +72,17 @@
                            </toggleGroup>
                         </ToggleButton>
                         <ToggleButton fx:id="barToggle" mnemonicParsing="false" text="Bar" toggleGroup="$chartGroup" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="137.0" prefWidth="600.0">
+                     <children>
+                        <TableView fx:id="chartTable" prefHeight="133.0" prefWidth="600.0">
+                          <columns>
+                            <TableColumn fx:id="chartCategoryColumn"  prefWidth="200.0" text="類別" />
+                            <TableColumn fx:id="chartAmountColumn" prefWidth="200.0" text="金額" />
+                            <TableColumn fx:id="chartPercentColumn" prefWidth="200.0" text="比例" />
+                          </columns>
+                        </TableView>
                      </children>
                   </HBox>
                </children>
