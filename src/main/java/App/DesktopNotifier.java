@@ -10,7 +10,7 @@ public class DesktopNotifier {
         }
         try{
             SystemTray tray = SystemTray.getSystemTray();
-            Image img = Toolkit.getDefaultToolkit().getImage("C:\\Users\\user\\Documents\\GitHub\\java2025_5\\src\\main\\java\\App\\img.png");
+            Image img = Toolkit.getDefaultToolkit().getImage("C:\\Users\\user\\Documents\\GitHub\\java2025_5\\src\\main\\resources\\img.png");
 
             TrayIcon mytrayIcon = new TrayIcon(img, "查看分析報告");
             mytrayIcon.setImageAutoSize(true);
