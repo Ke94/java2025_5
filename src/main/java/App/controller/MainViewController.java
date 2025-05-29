@@ -31,6 +31,10 @@ import java.io.IOException;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 
 public class MainViewController {
     private ListOfTransaction listOfTransaction = new ListOfTransaction();
@@ -405,4 +409,20 @@ public class MainViewController {
 
         balanceLabel.setText("目前剩餘金額：" + balance + " 元");
     }
+
+    @FXML
+    private void onExchangeRateButtonClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/view/ExchangeRateView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("匯率查詢");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
