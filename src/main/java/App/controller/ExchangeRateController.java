@@ -1,10 +1,20 @@
 package App.controller;
 
+import App.DesktopNotifier;
+import App.ForexData.ForexFetcher;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import App.service.*;
+import App.ForexData.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExchangeRateController {
 
@@ -25,19 +35,15 @@ public class ExchangeRateController {
     @FXML
     private void onQueryButtonClicked() {
         String currency = currencyComboBox.getValue();
+        Map<String, List<Double>> data = new HashMap<>();
+        List<Double> rates = new ArrayList<>();
 
-        // 假資料
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("TWD to " + currency);
-        series.getData().add(new XYChart.Data<>("5/01", 0.032));
-        series.getData().add(new XYChart.Data<>("5/08", 0.0315));
-        series.getData().add(new XYChart.Data<>("5/15", 0.0318));
-        series.getData().add(new XYChart.Data<>("5/22", 0.0312));
+        //fetch exchange data
+        data = ForexFetcher.loadExistingData();
+        rates = data.get(currency);
 
-        rateChart.getData().clear();
-        rateChart.getData().add(series);
 
         // Bot 建議
-        botSuggestionArea.setText("最近台幣兌 " + currency + " 匯率略有波動，建議觀察趨勢再決定是否兌換。");
+        botSuggestionArea.setText(openAIBot.getReport(ForexAnalyzer.analyze(data, currency)));
     }
 }
