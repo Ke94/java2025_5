@@ -14,7 +14,13 @@ public class ForexFetcher {
 
     public static Map<String, List<Double>> fetchAndAppendLatest() throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Map<String, List<Double>> allRates = loadExistingData();
+        Map<String, List<Double>> allRates;
+        try{
+            allRates = loadExistingData();
+        }
+        catch (IOException e){
+            allRates = new HashMap<>();
+        }
 
         for (String target : TARGET_CURRENCIES) {
             if (target.equals(BASE_CURRENCY)) continue;
@@ -45,8 +51,8 @@ public class ForexFetcher {
         return allRates;
     }
 
-    private static Map<String, List<Double>> loadExistingData() {
-        try {
+    public static Map<String, List<Double>> loadExistingData() throws IOException{
+//        try {
             String json = new String(Files.readAllBytes(Paths.get(SAVE_PATH)));
             Gson gson = new Gson();
             Map<String, List<Double>> map = new HashMap<>();
@@ -58,8 +64,8 @@ public class ForexFetcher {
                 map.put(key, list);
             }
             return map;
-        } catch (IOException e) {
-            return new HashMap<>();
-        }
+//        } catch (IOException e) {
+//            return new HashMap<>();
+//        }
     }
 }

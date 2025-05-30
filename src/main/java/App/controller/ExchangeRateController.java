@@ -1,10 +1,15 @@
 package App.controller;
 
+import App.ForexData.ForexFetcher;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class ExchangeRateController {
 
@@ -25,7 +30,22 @@ public class ExchangeRateController {
     @FXML
     private void onQueryButtonClicked() {
         String currency = currencyComboBox.getValue();
-
+        ForexFetcher fetcher = new ForexFetcher();
+        Map<String, List<Double>> owo;
+        try{
+            owo = fetcher.loadExistingData();
+            for(Map.Entry<String, List<Double>> o : owo.entrySet()){
+                System.out.println(o.getKey());
+            }
+        }
+        catch (IOException e){
+            try{
+                owo = fetcher.fetchAndAppendLatest();
+            }
+            catch (IOException er){
+                System.out.println(er.getMessage());
+            }
+        }
         // 假資料
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("TWD to " + currency);
