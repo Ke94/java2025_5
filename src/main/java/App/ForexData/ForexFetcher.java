@@ -45,7 +45,7 @@ public class ForexFetcher {
         return allRates;
     }
 
-    private static Map<String, List<Double>> loadExistingData() {
+    public static Map<String, List<Double>> loadExistingData() {
         try {
             String json = new String(Files.readAllBytes(Paths.get(SAVE_PATH)));
             Gson gson = new Gson();
