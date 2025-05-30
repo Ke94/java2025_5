@@ -90,7 +90,10 @@ public class MainViewController {
                 new SimpleStringProperty(cellData.getValue().getNote())
         );
 
+        yearComboBox.getItems().add(null); // null代表「全部」
         yearComboBox.getItems().addAll(2024, 2025);
+        yearComboBox.setPromptText("全部");
+
         // 改成包含「全部」與 1~12
         monthComboBox.getItems().add("全部");
         for (int i = 1; i <= 12; i++) {
@@ -301,7 +304,7 @@ public class MainViewController {
 
     @FXML
     private void onFilterButtonClicked() {
-        int selectedYear = yearComboBox.getValue();
+        Integer selectedYear = yearComboBox.getValue(); // 改成 Integer，可為 null
         String selectedMonthStr = monthComboBox.getValue();
         Integer selectedMonth = null;
         if (!"全部".equals(selectedMonthStr)) {
@@ -310,7 +313,11 @@ public class MainViewController {
 
         KindOfTransaction selectedKind = kindComboBox.getValue(); // 可能是 null
 
-        ListOfTransaction filtered = listOfTransaction.selectByYear(selectedYear);
+        ListOfTransaction filtered = listOfTransaction;
+
+        if (selectedYear != null) {
+            filtered = filtered.selectByYear(selectedYear);
+        }
 
         if (selectedMonth != null) {
             filtered = filtered.selectByMonth(selectedMonth);
@@ -329,9 +336,9 @@ public class MainViewController {
                 .toList();
 
         transactionList.setAll(sortedList);
-
         refreshChart();
     }
+
 
 
 
