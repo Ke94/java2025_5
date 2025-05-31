@@ -1,0 +1,226 @@
+/* === 整體應用背景、字體 === */
+.root {
+    -fx-background-color: #FFFFFF;
+    -fx-font-family: "Microsoft JhengHei", "Consolas", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+/* Label 標籤 */
+.label {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+/* Button / ComboBox / ToggleButton / Tab */
+.button, .toggle-button, .tab, .combo-box {
+    -fx-background-color: #F0F0F0;
+    -fx-text-fill: #333333;
+    -fx-border-color: #CCCCCC;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 4 8;
+}
+.button:hover, .toggle-button:hover, .tab:hover, .combo-box:hover {
+    -fx-background-color: #E0E0E0;
+}
+.button:focused, .toggle-button:focused, .tab:selected, .combo-box:focused {
+    -fx-border-color: #64B5F6;
+    -fx-background-color: #D0E6FA;
+    -fx-text-fill: #000000;
+}
+
+/* ComboBox Arrow Button */
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 4;
+}
+.combo-box .arrow {
+    -fx-background-color: #333333;
+    -fx-shape: "M0,0 L1,0 L0.5,1 Z";
+    -fx-scale-x: 0.6;
+    -fx-scale-y: 0.6;
+}
+
+/* ComboBox 下拉選單項目 */
+.list-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #333333;
+    -fx-padding: 4 8;
+}
+.list-cell:hover {
+    -fx-background-color: #E0E0E0;
+}
+
+/* TableView */
+.table-view {
+    -fx-background-color: #FFFFFF;
+    -fx-table-cell-border-color: #DDDDDD;
+    -fx-padding: 5;
+}
+.table-view .column-header-background,
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: #F0F0F0;
+}
+.table-view .table-row-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #DDDDDD;
+}
+.table-view .table-row-cell:filled:selected,
+.table-view .table-row-cell:filled:hover {
+    -fx-background-color: #D0E6FA;
+}
+.table-view .table-cell {
+    -fx-text-fill: #333333;
+}
+
+/* PieChart */
+.chart-pie {
+    -fx-border-color: transparent;
+}
+.chart-pie-label {
+    -fx-fill: #333333;
+}
+.default-color0.chart-pie { -fx-pie-color: #00BCD4; }
+.default-color1.chart-pie { -fx-pie-color: #8BC34A; }
+.default-color2.chart-pie { -fx-pie-color: #FFC107; }
+.default-color3.chart-pie { -fx-pie-color: #FF5722; }
+.default-color4.chart-pie { -fx-pie-color: #9C27B0; }
+
+/* PieChart Legend */
+.chart-legend {
+    -fx-background-color: transparent;
+}
+.chart-legend-item {
+    -fx-text-fill: #333333;
+}
+
+/* 內部文字 */
+.combo-box .list-cell, .combo-box .text,
+.toggle-button .text, .tab .text,
+.toggle-button .label, .tab .label {
+    -fx-text-fill: #333333;
+}
+
+/* === 深夜模式美化 === */
+.night-mode {
+    -fx-background-color: #121212;
+    -fx-text-fill: #DDDDDD;
+}
+
+.night-mode .label,
+.night-mode .table-cell,
+.night-mode .chart-pie-label,
+.night-mode .chart-legend-item,
+.night-mode .list-cell,
+.night-mode .combo-box .text {
+    -fx-text-fill: #DDDDDD;
+}
+
+.night-mode .button,
+.night-mode .toggle-button,
+.night-mode .combo-box,
+.night-mode .tab {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #444444;
+    -fx-text-fill: #DDDDDD;
+}
+.night-mode .button:hover,
+.night-mode .toggle-button:hover,
+.night-mode .combo-box:hover,
+.night-mode .tab:hover {
+    -fx-background-color: #2A2A2A;
+}
+.night-mode .button:focused,
+.night-mode .toggle-button:focused,
+.night-mode .combo-box:focused,
+.night-mode .tab:selected {
+    -fx-border-color: #64B5F6;
+    -fx-background-color: #2A2A2A;
+}
+
+/* TableView */
+.night-mode .table-view {
+    -fx-background-color: #121212;
+    -fx-table-cell-border-color: #2A2A2A;
+}
+.night-mode .table-view .column-header-background,
+.night-mode .table-view .column-header,
+.night-mode .table-view .filler {
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #DDDDDD;
+}
+.night-mode .table-view .table-row-cell {
+    -fx-background-color: #121212;
+    -fx-text-fill: #DDDDDD;
+    -fx-border-color: #2A2A2A;
+}
+.night-mode .table-view .table-row-cell:filled:selected,
+.night-mode .table-view .table-row-cell:filled:hover {
+    -fx-background-color: #2A2A2A;
+}
+.night-mode .table-view .table-cell {
+    -fx-text-fill: #DDDDDD;
+}
+
+/* PieChart legend, 列表項目背景 */
+.night-mode .chart-legend {
+    -fx-background-color: transparent;
+}
+.night-mode .list-cell:hover {
+    -fx-background-color: #2A2A2A;
+}
+.night-mode .combo-box,
+.night-mode .combo-box .list-cell,
+.night-mode .combo-box .text {
+    -fx-background-color: #1E1E1E;  /* 黑色背景 */
+    -fx-text-fill: #DDDDDD;         /* 白色文字 */
+}
+.night-mode .combo-box .arrow-button {
+    -fx-background-color: #1E1E1E;
+}
+.night-mode .combo-box .arrow-button:hover {
+    -fx-background-color: #2A2A2A;
+}
+/* ComboBox 下拉箭頭（深夜模式） */
+.night-mode .combo-box .arrow {
+    -fx-background-color: #DDDDDD;  /* 白灰色箭頭更清楚 */
+    -fx-shape: "M0,0 L1,0 L0.5,1 Z";  /* 向下箭頭 */
+    -fx-scale-x: 0.8;  /* 稍微放大箭頭 */
+    -fx-scale-y: 0.8;
+}
+/* PieChart Label 文字在深夜模式要變亮色 */
+.night-mode .chart-pie-label {
+    -fx-fill: #DDDDDD;  /* 白灰色文字 */
+}
+/* BarChart 背景顏色（深夜模式） */
+.night-mode .chart-plot-background {
+    -fx-background-color: #121212;
+}
+
+/* BarChart 格線（深夜模式） */
+.night-mode .chart-vertical-grid-lines,
+.night-mode .chart-horizontal-grid-lines {
+    -fx-stroke: #444444;   /* 柔和灰色格線 */
+}
+
+/* 座標軸文字（數字與 Label） */
+.night-mode .axis,
+.night-mode .axis .tick-label,
+.night-mode .axis-label {
+    -fx-text-fill: white;   /* 白色，清晰可見 */
+}
+
+
+/* 圖表標題文字（如果有） */
+.night-mode .chart-title {
+    -fx-text-fill: white;
+}
+
+/* 圖例文字顏色（Legend） */
+.night-mode .chart-legend-item {
+    -fx-text-fill: white;
+}
+
+
+
