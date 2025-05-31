@@ -57,3 +57,4 @@ public class ExchangeRateController {
         botSuggestionArea.setText(openAIBot.getReport(ForexAnalyzer.analyze(data, currency)));
     }
 }
+// test
