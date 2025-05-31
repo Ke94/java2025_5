@@ -33,9 +33,18 @@ public class ExchangeRateController {
     @FXML
     private void onQueryButtonClicked() {
         String currency = currencyComboBox.getValue();
-        ForexFetcher fetcher = new ForexFetcher();
-        Map<String, List<Double>> data;
-        data = fetcher.loadExistingData();
+        Map<String, List<Double>> data = new HashMap<>();
+        try{
+            data = ForexFetcher.loadExistingData();
+        }
+        catch(IOException e){
+            try{
+                data = ForexFetcher.fetchAndAppendLatest();
+            }
+            catch(IOException err){
+                e.printStackTrace();
+            }
+        }
 
         XYChart.Series<Integer, Number> series = new XYChart.Series<>();
         series.setName("TWD to " + currency);
