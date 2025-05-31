@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.*;
 import App.service.*;
 import App.DesktopNotifier;
+import App.*;
 
 public class Scheduler {
 
@@ -21,7 +22,10 @@ public class Scheduler {
         for(String currency : data.keySet()){
             result.append(ForexAnalyzer.analyze(data, currency));
         }
-        DesktopNotifier.showMessage("匯率通知", openAIBot.getAdvice(result.toString()));
+        DesktopNotifier.showMessage("匯率通知", openAIBot.getAdvice(result.toString()), () -> {
+            System.out.println("通知被點擊，準備開啟 ExchangeRate GUI...");
+            ExchangeRateApp.launchApp();
+        });
 
     }
 }
