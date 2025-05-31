@@ -6,12 +6,7 @@ import App.ForexData.*;
 
 public class openAIBot {
     private static final String apiKey = ConfigLoader.getKey("OPENAI_API_KEY");
-    private static String data = ForexAnalyzer.analyze(ForexFetcher.loadExistingData(), "JPY");
 
-    public static void main(String[] args) {
-        AdviceAgent agent = AiServices.create(AdviceAgent.class, OpenAiChatModel.builder().apiKey(apiKey).modelName("gpt-4o").build());
-        System.out.println(agent.generateReport(data));
-    }
 
     public static String getAdvice(String exchangeData){
         AdviceAgent agent = AiServices.create(AdviceAgent.class, OpenAiChatModel.builder().apiKey(apiKey).modelName("gpt-4o").build());
