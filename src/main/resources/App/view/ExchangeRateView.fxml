@@ -24,10 +24,10 @@
     <center>
         <LineChart fx:id="rateChart" prefHeight="300.0" prefWidth="786.0" title="匯率變化" BorderPane.alignment="CENTER">
             <xAxis>
-                <NumberAxis label="日期" side="BOTTOM" />
+                <NumberAxis label="遠-近一百天日期-近" side="BOTTOM" />
             </xAxis>
             <yAxis>
-                <NumberAxis label="匯率" side="LEFT" />
+                <NumberAxis fx:id="yAxis" label="匯率" side="LEFT" />
             </yAxis>
         </LineChart>
     </center>
