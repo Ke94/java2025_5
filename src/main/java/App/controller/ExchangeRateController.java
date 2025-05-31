@@ -10,7 +10,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import App.service.*;
 import App.ForexData.*;
+import javafx.scene.control.Tooltip;
+import javafx.util.Duration;
+import org.apache.poi.ss.formula.functions.T;
 
+import javax.tools.Tool;
 import java.io.IOException;
 import java.util.*;
 
@@ -52,6 +56,14 @@ public class ExchangeRateController {
 
         rateChart.getData().clear();
         rateChart.getData().add(series);
+
+        for(XYChart.Data<Integer, Number> pt : rateChart.getData().getFirst().getData()){
+            Tooltip tip = new Tooltip((99-pt.getXValue())+"天前匯率: "+pt.getYValue());
+            tip.setShowDelay(Duration.millis(100));
+            Tooltip.install(pt.getNode(), tip);
+        }
+
+
 
         // Bot 建議
         botSuggestionArea.setText(openAIBot.getReport(ForexAnalyzer.analyze(data, currency)));
