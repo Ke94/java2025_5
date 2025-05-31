@@ -25,7 +25,7 @@
    <center>
       <LineChart fx:id="rateChart" prefHeight="300.0" prefWidth="786.0" title="匯率變化" BorderPane.alignment="CENTER">
         <xAxis>
-          <CategoryAxis label="日期" side="BOTTOM" />
+          <NumberAxis label="日期" side="BOTTOM" />
         </xAxis>
         <yAxis>
           <NumberAxis label="匯率" side="LEFT" />

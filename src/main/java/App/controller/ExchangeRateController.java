@@ -17,9 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ExchangeRateController {
-
     @FXML private ComboBox<String> currencyComboBox;
-    @FXML private LineChart<String, Number> rateChart;
+    @FXML private LineChart<Integer, Number> rateChart;
     @FXML private TextArea botSuggestionArea;
 
     @FXML
@@ -39,36 +38,28 @@ public class ExchangeRateController {
         Map<String, List<Double>> owo;
         try{
             owo = fetcher.loadExistingData();
-            for(Map.Entry<String, List<Double>> o : owo.entrySet()){
-                System.out.println(o.getKey());
-            }
         }
         catch (IOException e){
             try{
                 owo = fetcher.fetchAndAppendLatest();
             }
             catch (IOException er){
+                owo = new HashMap<>();
                 System.out.println(er.getMessage());
             }
         }
-        // 假資料
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("TWD to " + currency);
-        series.getData().add(new XYChart.Data<>("5/01", 0.032));
-        series.getData().add(new XYChart.Data<>("5/08", 0.0315));
-        series.getData().add(new XYChart.Data<>("5/15", 0.0318));
-        series.getData().add(new XYChart.Data<>("5/22", 0.0312));
-        Map<String, List<Double>> data = new HashMap<>();
-        List<Double> rates = new ArrayList<>();
 
-        //fetch exchange data
-        data = ForexFetcher.loadExistingData();
-        rates = data.get(currency);
+        XYChart.Series<Integer, Number> series = new XYChart.Series<>();
+        series.setName("TWD to " + currency);
+        int i = 0;
+        for(Double d : owo.get(currency)){
+            series.getData().add(new XYChart.Data<>(i++, d));
+        }
 
         rateChart.getData().clear();
         rateChart.getData().add(series);
 
         // Bot 建議
-        botSuggestionArea.setText(openAIBot.getReport(ForexAnalyzer.analyze(data, currency)));
+//        botSuggestionArea.setText(openAIBot.getReport(ForexAnalyzer.analyze(data, currency)));
     }
 }
