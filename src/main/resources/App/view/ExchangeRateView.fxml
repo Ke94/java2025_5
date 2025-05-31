@@ -11,7 +11,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.controller.ExchangeRateController">
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.controller.ExchangeRateController">
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -32,10 +33,10 @@
       </LineChart>
    </center>
    <right>
-      <VBox prefHeight="700.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <Label text="建議" />
-            <TextArea fx:id="botSuggestionArea" editable="false" prefHeight="526.0" prefWidth="400.0" wrapText="true" />
+            <TextArea fx:id="botSuggestionArea" editable="false" prefHeight="289.0" prefWidth="100.0" wrapText="true" />
          </children>
       </VBox>
    </right>
