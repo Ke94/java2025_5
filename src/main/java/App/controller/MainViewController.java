@@ -63,6 +63,7 @@ public class MainViewController {
     @FXML private TableColumn<CategorySummary, String> chartCategoryColumn;
     @FXML private TableColumn<CategorySummary, Number> chartAmountColumn;
     @FXML private TableColumn<CategorySummary, Double> chartPercentColumn;
+    @FXML private Button nightModeButton;
 
 
     @FXML
@@ -136,6 +137,7 @@ public class MainViewController {
         });
 
         updateBalance();
+
     }
 
     private void showChartTable(){chartTable.setItems(transactionList.getCategorySummaries());}
@@ -431,5 +433,22 @@ public class MainViewController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void onNightModeClicked() {
+        Scene scene = transactionTable.getScene();  // 任何在場景中的元件都行
+
+        if (scene.getRoot().getStyleClass().contains("night-mode")) {
+            // 切換回早晨模式
+            scene.getRoot().getStyleClass().remove("night-mode");
+            nightModeButton.setText("深夜模式");  // 按鈕改回顯示「深夜模式」
+        } else {
+            // 切換到深夜模式
+            scene.getRoot().getStyleClass().add("night-mode");
+            nightModeButton.setText("早晨模式");  // 按鈕顯示「早晨模式」
+        }
+    }
+
+
 
 }

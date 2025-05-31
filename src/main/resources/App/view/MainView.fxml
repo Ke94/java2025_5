@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.controller.MainViewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.controller.MainViewController">
    <top>
       <HBox prefHeight="31.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER_LEFT">
          <children>
@@ -25,18 +25,21 @@
             <Button mnemonicParsing="false" onAction="#onEditButtonClicked" text="編輯" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#onImportButtonClicked" text="匯入" />
              <Button onAction="#onExportButtonClicked" text="匯出" />
-             <Button mnemonicParsing="false" text="匯率查詢" HBox.hgrow="ALWAYS" onAction="#onExchangeRateButtonClicked"/>
-            <ComboBox fx:id="yearComboBox" prefHeight="23.0" prefWidth="75.0" promptText="年份" />
-            <ComboBox fx:id="monthComboBox" prefHeight="23.0" prefWidth="75.0" promptText="月份" />
-            <ComboBox fx:id="kindComboBox" prefHeight="23.0" prefWidth="75.0" promptText="支出/收入/全部" />
+             <Button mnemonicParsing="false" onAction="#onExchangeRateButtonClicked" text="匯率查詢" HBox.hgrow="ALWAYS" />
+            <ComboBox fx:id="yearComboBox" prefHeight="25.0" prefWidth="90.0" promptText="年份" />
+            <ComboBox fx:id="monthComboBox" prefHeight="25.0" prefWidth="90.0" promptText="月份" />
+            <ComboBox fx:id="kindComboBox" prefHeight="25.0" prefWidth="90.0" promptText="支出/收入/全部" />
             <Button mnemonicParsing="false" onAction="#onFilterButtonClicked" prefHeight="23.0" prefWidth="51.0" text="篩選" />
              <Label fx:id="balanceLabel" text="目前餘額：" />
+             <Button fx:id="nightModeButton" text="深夜模式" onAction="#onNightModeClicked"/>
+
+
 
          </children>
       </HBox>
    </top>
    <left>
-      <TableView fx:id="transactionTable" maxWidth="400.0" prefHeight="231.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="transactionTable" maxWidth="420.0" prefHeight="569.0" prefWidth="413.0" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn fx:id="dateColumn" prefWidth="100.0" text="日期" />
             <TableColumn fx:id="kindColumn" prefWidth="75.0" text="收支" />
@@ -78,7 +81,7 @@
                      <children>
                         <TableView fx:id="chartTable" prefHeight="133.0" prefWidth="600.0">
                           <columns>
-                            <TableColumn fx:id="chartCategoryColumn"  prefWidth="200.0" text="類別" />
+                            <TableColumn fx:id="chartCategoryColumn" prefWidth="200.0" text="類別" />
                             <TableColumn fx:id="chartAmountColumn" prefWidth="200.0" text="金額" />
                             <TableColumn fx:id="chartPercentColumn" prefWidth="200.0" text="比例" />
                           </columns>
