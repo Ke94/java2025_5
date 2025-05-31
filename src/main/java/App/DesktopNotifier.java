@@ -16,6 +16,7 @@ public class DesktopNotifier {
             TrayIcon mytrayIcon = new TrayIcon(img, "查看分析報告");
             mytrayIcon.setImageAutoSize(true);
 
+            //新增事件
             mytrayIcon.addActionListener(e -> {
                 if (onClickAction != null) {
                     onClickAction.run();
