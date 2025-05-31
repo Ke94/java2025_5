@@ -4,6 +4,7 @@ import App.DesktopNotifier;
 import App.ForexData.ForexFetcher;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
@@ -11,16 +12,13 @@ import App.service.*;
 import App.ForexData.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ExchangeRateController {
-
     @FXML private ComboBox<String> currencyComboBox;
-    @FXML private LineChart<String, Number> rateChart;
+    @FXML private LineChart<Integer, Number> rateChart;
     @FXML private TextArea botSuggestionArea;
+    @FXML private NumberAxis yAxis;
 
     @FXML
     public void initialize() {
@@ -35,13 +33,25 @@ public class ExchangeRateController {
     @FXML
     private void onQueryButtonClicked() {
         String currency = currencyComboBox.getValue();
-        Map<String, List<Double>> data = new HashMap<>();
-        List<Double> rates = new ArrayList<>();
+        ForexFetcher fetcher = new ForexFetcher();
+        Map<String, List<Double>> data;
+        data = fetcher.loadExistingData();
 
-        //fetch exchange data
-        data = ForexFetcher.loadExistingData();
-        rates = data.get(currency);
+        XYChart.Series<Integer, Number> series = new XYChart.Series<>();
+        series.setName("TWD to " + currency);
+        List<Double> l = data.get(currency).reversed();
+        int i = 0;
+        Double mn = Collections.min(l), mx = Collections.max(l);
+        for(Double d : l){
+            series.getData().add(new XYChart.Data<>(i++, d));
+        }
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(mn);
+        yAxis.setUpperBound(mx);
+        yAxis.setTickUnit(0.5);
 
+        rateChart.getData().clear();
+        rateChart.getData().add(series);
 
         // Bot 建議
         botSuggestionArea.setText(openAIBot.getReport(ForexAnalyzer.analyze(data, currency)));
