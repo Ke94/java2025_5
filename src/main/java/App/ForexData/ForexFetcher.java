@@ -14,10 +14,11 @@ public class ForexFetcher {
 
     public static Map<String, List<Double>> fetchAndAppendLatest() throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Map<String, List<Double>> allRates = loadExistingData();
+        Map<String, List<Double>> allRates = new HashMap<>();
 
         for (String target : TARGET_CURRENCIES) {
             if (target.equals(BASE_CURRENCY)) continue;
+
             String urlStr = String.format(
                     "https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=%s&to_symbol=%s&apikey=%s&outputsize=compact",
                     BASE_CURRENCY, target, API_KEY);
@@ -25,16 +26,22 @@ public class ForexFetcher {
             try {
                 String json = HttpUtil.fetchJson(urlStr);
                 JsonObject jsonObj = JsonParser.parseString(json).getAsJsonObject();
+
                 JsonObject timeSeries = jsonObj.getAsJsonObject("Time Series FX (Daily)");
+                if (timeSeries == null) throw new IllegalStateException("Missing FX data");
 
-                String latestDate = Collections.max(timeSeries.keySet());
-                double latestClose = timeSeries.getAsJsonObject(latestDate).get("4. close").getAsDouble();
+                List<String> sortedDates = new ArrayList<>(timeSeries.keySet());
+                Collections.sort(sortedDates, Collections.reverseOrder());
 
-                allRates.computeIfAbsent(target, k -> new ArrayList<>());
-                List<Double> list = allRates.get(target);
-                if (list.isEmpty() || list.getFirst() != latestClose) {
-                    list.addFirst(latestClose);
+                List<Double> rateList = new ArrayList<>();
+                for (String date : sortedDates) {
+                    JsonObject daily = timeSeries.getAsJsonObject(date);
+                    double close = daily.get("4. close").getAsDouble();
+                    rateList.add(close);
                 }
+
+                allRates.put(target, rateList);
+
             } catch (Exception e) {
                 System.err.println("Error fetching " + BASE_CURRENCY + "/" + target + ": " + e.getMessage());
             }
