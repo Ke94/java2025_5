@@ -52,8 +52,8 @@ public class ForexFetcher {
         return allRates;
     }
 
-    public static Map<String, List<Double>> loadExistingData(){
-        try {
+    public static Map<String, List<Double>> loadExistingData() throws IOException{
+//        try {
             String json = new String(Files.readAllBytes(Paths.get(SAVE_PATH)));
             Gson gson = new Gson();
             Map<String, List<Double>> map = new HashMap<>();
@@ -65,8 +65,8 @@ public class ForexFetcher {
                 map.put(key, list);
             }
             return map;
-        } catch (IOException e) {
-            return new HashMap<>();
-        }
+//        } catch (IOException e) {
+//            return new HashMap<>();
+//        }
     }
 }
