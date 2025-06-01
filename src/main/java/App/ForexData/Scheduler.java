@@ -3,8 +3,8 @@ package App.ForexData;
 import java.io.IOException;
 import java.util.*;
 import App.service.*;
-import App.DesktopNotifier;
-import App.*;
+import App.connection.DesktopNotifier;
+import App.connection.ExchangeRateApp;
 
 public class Scheduler {
 
