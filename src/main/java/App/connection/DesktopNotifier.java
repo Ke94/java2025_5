@@ -1,7 +1,6 @@
-package App;
+package App.connection;
 import java.awt.*;
 import java.awt.TrayIcon.MessageType;
-import java.awt.event.ActionListener;
 
 public class DesktopNotifier {
     public static void showMessage(String title, String message, Runnable onClickAction){

@@ -1,6 +1,5 @@
 package App.controller;
 
-import App.DesktopNotifier;
 import App.ForexData.ForexFetcher;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
@@ -12,9 +11,7 @@ import App.service.*;
 import App.ForexData.*;
 import javafx.scene.control.Tooltip;
 import javafx.util.Duration;
-import org.apache.poi.ss.formula.functions.T;
 
-import javax.tools.Tool;
 import java.io.IOException;
 import java.util.*;
 
