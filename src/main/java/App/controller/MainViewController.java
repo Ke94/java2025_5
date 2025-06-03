@@ -112,11 +112,9 @@ public class MainViewController {
 
 
 
-//        showPieChart();
-//        showChartTable();
-        showBarChart();
         showPieChart();
-        refreshChart();
+        showChartTable();
+//        refreshChart();
         ToggleGroup chartGroup = pieToggle.getToggleGroup(); // 切換圖表的按鈕組
         chartGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             if (newToggle != null) {
