@@ -114,6 +114,7 @@ public class MainViewController {
 
         showPieChart();
         showChartTable();
+//        refreshChart();
         ToggleGroup chartGroup = pieToggle.getToggleGroup(); // 切換圖表的按鈕組
         chartGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             if (newToggle != null) {
@@ -370,6 +371,8 @@ public class MainViewController {
                 listOfTransaction = new ListOfTransaction(imported);
                 transactionList.setAll(imported);
                 System.out.println("匯入成功：" + selectedFile.getName());
+                refreshChart();
+                updateBalance();
             } catch (IOException e) {
                 System.out.println("匯入失敗：" + e.getMessage());
             }

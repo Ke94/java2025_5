@@ -69,12 +69,12 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="45.0" prefWidth="600.0">
                      <children>
-                        <ToggleButton fx:id="pieToggle" mnemonicParsing="false" text="Pie">
+                        <ToggleButton fx:id="pieToggle" mnemonicParsing="false" text="圓餅圖">
                            <toggleGroup>
                               <ToggleGroup fx:id="chartGroup" />
                            </toggleGroup>
                         </ToggleButton>
-                        <ToggleButton fx:id="barToggle" mnemonicParsing="false" text="Bar" toggleGroup="$chartGroup" />
+                        <ToggleButton fx:id="barToggle" mnemonicParsing="false" text="長條圖" toggleGroup="$chartGroup" />
                      </children>
                   </HBox>
                   <HBox prefHeight="137.0" prefWidth="600.0">
