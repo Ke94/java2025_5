@@ -11,7 +11,7 @@ public interface AdviceAgent {
             """
             以下是使用TWD兌換某幣別的分析資料：
             {{report}}
-            請你撰寫一篇有段落的文章， 綜合是否建議買入，並解釋原因:
+            請你撰寫一篇簡短的文章， 以及請在段落一開始就告訴我是否要買入，並解釋原因:
             """
     )
     String generateReport(@V("report") String report);

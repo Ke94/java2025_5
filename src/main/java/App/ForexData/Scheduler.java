@@ -26,6 +26,5 @@ public class Scheduler {
             System.out.println("通知被點擊，準備開啟 ExchangeRate GUI...");
             ExchangeRateApp.launchApp();
         });
-
     }
 }
